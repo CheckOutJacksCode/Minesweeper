@@ -1,3 +1,5 @@
+# Creates a piece instance
+
 class Piece():
     def __init__(self, hasBomb):
         self.hasBomb = hasBomb
@@ -13,6 +15,9 @@ class Piece():
     def getFlagged(self):
         return self.flagged
 
+# Recieving a dictionary of neighbors, setting the 'numAround'
+# property by looping through each neighbor to see if their 'hasBomb'
+# property is true.
     def setNeighbors(self, neighbors):
         self.neighbors = neighbors
         self.setNumAround()

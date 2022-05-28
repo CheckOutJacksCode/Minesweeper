@@ -1,6 +1,10 @@
 import pygame
 import os
 
+
+# Initializes a new Game class instance  with a board and screensize parameters.
+# The size of each piece is calculated using integer division; the screensize dimensions
+# divided by the board size dimensions.
 class Game():
     def __init__(self, board, screenSize):
         self.board = board
@@ -8,6 +12,10 @@ class Game():
         self.pieceSize = self.screenSize[0] // self.board.getSize()[1], self.screenSize[1] // self.board.getSize()[0]
         self.loadImages()
 
+# Main event loop. Creates a screen, and initializes pygame.
+# Handles the mouse click events, rightClick will either be true or false
+# and will be sent to the handleClick function along with the position of the
+# click. It then draws the board with the updated move.
     def run(self):
         pygame.init()
         self.screen = pygame.display.set_mode(self.screenSize)
@@ -23,10 +31,11 @@ class Game():
             self.draw()
             pygame.display.flip()
             if (self.board.getWon()):
-
                 running = False
         pygame.quit()
-
+# Loops through every piece on the board, retrieves their updated
+# value along with the corresponding image, and blits the images starting
+# with the lop left space, cycling through each column before blitting the next row.
     def draw(self):
         topLeft = (0, 0)
         for row in range(self.board.getSize()[0]):
@@ -37,7 +46,8 @@ class Game():
                 topLeft = topLeft[0] + self.pieceSize[0], topLeft[1]
             topLeft = 0, topLeft[1] + self.pieceSize[1]
 
-
+# Uses os to load image files from the images folder into a dictionary,
+# uses pygame.transform to scale down images to the size of a piece.
     def loadImages(self):
         self.images = {}
         for fileName in os.listdir("images"):
@@ -47,6 +57,8 @@ class Game():
             image = pygame.transform.scale(image, self.pieceSize)
             self.images[fileName.split(".")[0]] = image
 
+# returns the correct image from the image folder, depending on the properties of the
+# piece that is passed in.
     def getImage(self, piece):
         string = "bomb" if piece.getHasBomb() else str(piece.getNumAround())
         if (piece.getClicked()):
@@ -55,6 +67,8 @@ class Game():
             string = "flagged" if piece.getFlagged() else "facingDown"
         return self.images[string]
 
+# Generates the index of the piece clicked using integer division.
+# Handles the click functionality.
     def handleClick(self, position, rightClick):
         if (self.board.getLost()):
             return
